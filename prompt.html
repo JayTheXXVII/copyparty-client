@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { 
+      font-family: sans-serif; 
+      padding: 20px; 
+      background: #1a1a1a; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+      margin: 0;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+	    overflow: hidden !important;
+    }
+    input { 
+      padding: 8px; 
+      font-size: 14px; 
+      border: 1px solid #ccc; 
+      border-radius: 4px; 
+      width: 300px; 
+      box-sizing: border-box; 
+    }
+    button { 
+      padding: 10px;
+      font-size: 14px;
+      color: #323232;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 300px;
+      background: linear-gradient(#ffcc53, #f80);
+      font-weight: bold;
+    }
+    #submitBtn:hover {
+    filter: brightness(1.1);
+    }
+    .container {
+      background: #323232;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+      padding: 10px;
+      background: #ffe6e6;
+      border-radius: 4px;
+      display: none;
+    }
+    .info {
+      color: #666;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+    .header-logo {
+     max-width: 256px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="logo-header"></header>
+    <img src="./icon.png" alt="Copyparty Client" class="header-logo">
+    <h2></h2>
+    </header>
+    <label for="urlInput">Enter Web App URL:</label>
+    <input type="text" id="urlInput" value="" placeholder="http://localhost:3923/" />
+    <button id="submitBtn">Connect</button>
+    <div id="error-message" class="error"></div>
+    <div class="info">URL will be saved for next session</div>
+  </div>
+
+  <script>
+    // Load saved URL when page loads
+    window.addEventListener('DOMContentLoaded', async function() {
+      try {
+        // Direct IPC call since we have nodeIntegration: true
+        const { ipcRenderer } = require('electron');
+        const result = await ipcRenderer.invoke('load-url');
+        if (result.url) {
+          document.getElementById('urlInput').value = result.url;
+          console.log('Loaded saved URL:', result.url);
+        }
+      } catch (error) {
+        console.error('Error loading saved URL:', error);
+      }
+    });
+
+    function handleSubmit() {
+      const urlInput = document.getElementById('urlInput');
+      const url = urlInput.value.trim();
+      const errorMessage = document.getElementById('error-message');
+      
+      // Clear previous errors
+      errorMessage.style.display = 'none';
+      errorMessage.textContent = '';
+      
+      console.log('Button clicked, URL:', url);
+      
+      if (!url || url === 'https://') {
+        errorMessage.textContent = 'Please enter a valid URL';
+        errorMessage.style.display = 'block';
+        return;
+      }
+      
+      // Validate URL format
+      try {
+        new URL(url);
+        console.log('URL is valid:', url);
+        
+        // Save URL before sending to main process
+        const { ipcRenderer } = require('electron');
+        ipcRenderer.invoke('save-url', url)
+          .then(saveResult => {
+            if (saveResult.success) {
+              console.log('URL saved successfully');
+            } else {
+              console.error('Failed to save URL:', saveResult.error);
+            }
+            
+            // Send URL to main process and close window
+            ipcRenderer.send('submit-url', url);
+            window.close()
+          })
+          .catch(saveError => {
+            console.error('Error saving URL:', saveError);
+            // Still send the URL even if saving fails
+            const { ipcRenderer } = require('electron');
+            ipcRenderer.send('submit-url', url);
+          });
+        
+      } catch (e) {
+        errorMessage.textContent = 'Please enter a valid URL format';
+        errorMessage.style.display = 'block';
+        console.error('Invalid URL:', e);
+      }
+    }
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        handleSubmit();
+      }
+    }
+
+    // Set up event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      const submitBtn = document.getElementById('submitBtn');
+      const urlInput = document.getElementById('urlInput');
+      
+      submitBtn.addEventListener('click', handleSubmit);
+      urlInput.addEventListener('keypress', handleKeyPress);
+      
+      console.log('Event listeners set up successfully');
+    });
+  </script>
+</body>
+</html>
