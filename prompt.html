@@ -3,9 +3,9 @@
 <head>
   <style>
     body { 
-      font-family: sans-serif; 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 20px; 
-      background: #1a1a1a; 
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
       display: flex; 
       flex-direction: column; 
       gap: 10px; 
@@ -13,62 +13,135 @@
       height: 100vh;
       justify-content: center;
       align-items: center;
-	    overflow: hidden !important;
+      overflow: hidden !important;
+      color: #f0f0f0;
     }
-    input { 
-      padding: 8px; 
-      font-size: 14px; 
-      border: 1px solid #ccc; 
-      border-radius: 4px; 
-      width: 300px; 
-      box-sizing: border-box; 
+    
+    .container {
+      background: rgba(40, 40, 40, 0.95);
+      color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      text-align: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      width: 90%;
+      max-width: 400px;
+      transition: all 0.3s ease;
     }
-    button { 
-      padding: 10px;
+    
+    .header-logo {
+      max-width: 128px;
+      margin: 0 auto 20px;
+      display: block;
+    }
+    
+    h2 {
+      margin: 0 0 20px 0;
+      font-weight: 300;
+      font-size: 24px;
+      color: #ffcc53;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      text-align: left;
       font-size: 14px;
+      color: #ccc;
+    }
+    
+    input { 
+      padding: 12px 15px; 
+      font-size: 16px; 
+      border: 1px solid #444;
+      border-radius: 8px; 
+      width: 100%; 
+      box-sizing: border-box; 
+      background: rgba(30, 30, 30, 0.7);
+      color: white;
+      transition: all 0.3s ease;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #ffcc53;
+      box-shadow: 0 0 0 2px rgba(255, 204, 83, 0.3);
+    }
+    
+    button { 
+      padding: 14px;
+      font-size: 16px;
       color: #323232;
       border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      width: 300px;
-      background: linear-gradient(#ffcc53, #f80);
-      font-weight: bold;
-    }
-    #submitBtn:hover {
-    filter: brightness(1.1);
-    }
-    .container {
-      background: #323232;
-      color: white;
-      padding: 20px;
       border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      text-align: center;
+      cursor: pointer;
+      width: 100%;
+      background: linear-gradient(135deg, #ffcc53 0%, #f80 100%);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+      box-shadow: 0 4px 15px rgba(248, 128, 0, 0.3);
     }
+    
+    button:hover {
+      filter: brightness(1.1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(248, 128, 0, 0.4);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    #submitBtn:hover {
+      filter: brightness(1.1);
+    }
+    
     .error {
-      color: red;
-      margin-top: 10px;
-      padding: 10px;
-      background: #ffe6e6;
-      border-radius: 4px;
+      color: #ff6b6b;
+      margin-top: 15px;
+      padding: 12px;
+      background: rgba(255, 107, 107, 0.1);
+      border-radius: 8px;
       display: none;
+      border-left: 4px solid #ff6b6b;
+      text-align: left;
+      font-size: 14px;
     }
+    
     .info {
-      color: #666;
+      color: #888;
       font-size: 12px;
-      margin-top: 10px;
+      margin-top: 20px;
+      padding: 10px;
+      background: rgba(30, 30, 30, 0.5);
+      border-radius: 6px;
     }
-    .header-logo {
-     max-width: 256px;
+    
+    .logo-header {
+      margin-bottom: 20px;
+    }
+    
+    /* Animation for container */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .container {
+      animation: fadeIn 0.5s ease-out;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <header class="logo-header"></header>
-    <img src="./icon.png" alt="Copyparty Client" class="header-logo">
-    <h2></h2>
+    <header class="logo-header">
+      <img src="./icon.png" alt="Copyparty Client" class="header-logo">
     </header>
+    <h2>Copyparty Connect</h2>
     <label for="urlInput">Enter Web App URL:</label>
     <input type="text" id="urlInput" value="" placeholder="http://localhost:3923/" />
     <button id="submitBtn">Connect</button>
@@ -86,6 +159,8 @@
         if (result.url) {
           document.getElementById('urlInput').value = result.url;
           console.log('Loaded saved URL:', result.url);
+        } else {
+          console.log('No saved URL found');
         }
       } catch (error) {
         console.error('Error loading saved URL:', error);
