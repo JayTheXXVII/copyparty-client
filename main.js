@@ -46,6 +46,7 @@ function createWindow(urlParam) {
   const win = new BrowserWindow({
     width: 1280,
     height: 720,
+    autoHideMenuBar: true,
     icon: path.join(__dirname, process.platform === 'win32' ? 'icon.ico' : 'icon.png'),
     webPreferences: {
       nodeIntegration: true,     // Allow this for the prompt page
@@ -146,6 +147,7 @@ ipcMain.on('submit-url', (event, url) => {
   const newWin = new BrowserWindow({
     width: 1280,
     height: 720,
+    autoHideMenuBar: true,
     icon: path.join(__dirname, process.platform === 'win32' ? 'icon.ico' : 'icon.png'),
     webPreferences: {
       nodeIntegration: true,     // Allow this for the prompt page
