@@ -522,9 +522,21 @@
       </h2>
       <img
         src="https://raw.githubusercontent.com/JayTheXXVII/jaythexxvii.github.io/refs/heads/main/Assets/Copyparty-Client-Homepage.png"
-        alt="Copyparty-Client" class="center" />
+        alt="Copyparty-Client" class="Copyparty-Windows-Image" />
+      	  <img
+			src="https://raw.githubusercontent.com/JayTheXXVII/jaythexxvii.github.io/refs/heads/main/Assets/Copyparty%20Mobile%20Client%20Shrunk.png"
+			alt="Copyparty-Client" class="Copyparty-Android-Image" />
 		<style>
-		.center {max-width: -moz-available;}
+		.center, .Copyparty-Windows-Image, .Copyparty-Android-Image {max-width: -moz-available;}
+		</style>
+		<style>
+		@media (min-width: 0px) and (max-width: 795px) {
+			.Copyparty-Windows-Image {display: none;}
+			.Copyparty-Android-Image {min-width: -moz-available;}
+		}
+		@media (min-width: 796px) {
+			.Copyparty-Android-Image {display: none;}
+		}
 		</style>
     </body>
   </main>
