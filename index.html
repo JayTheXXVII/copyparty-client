@@ -45,10 +45,10 @@
         <h2 class="Copyparty-Client-Header"> <a href="https://github.com/JayTheXXVII/Copyparty-Client">Copyparty-Client</a></font></h2>
       <img
         src="https://raw.githubusercontent.com/JayTheXXVII/jaythexxvii.github.io/refs/heads/main/Assets/Copyparty-Client-Homepage.png"
-        alt="Copyparty-Client" class="Copyparty-Windows-Image" />
+        alt="Copyparty-Client" class="Copyparty-Windows-Image" onclick="expandImage(this)"/>
       	  <img
 			src="https://raw.githubusercontent.com/JayTheXXVII/jaythexxvii.github.io/refs/heads/main/Assets/Copyparty%20Mobile%20Client%20Shrunk.png"
-			alt="Copyparty-Client" class="Copyparty-Android-Image" />
+			alt="Copyparty-Client" class="Copyparty-Android-Image" onclick="expandImage(this)"/>
 	</body>
 </nav>
 	<nav class="cloudflare-staus-nav" >
@@ -61,6 +61,22 @@
 </div>
 
     <script>
+<!-- Zoom Logic -->	
+function expandImage(imgElement) {
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img");
+  
+  // Set the source of the large image to match the clicked thumbnail
+  lightboxImg.src = imgElement.src;
+  // Show the overlay
+  lightbox.style.display = "flex";
+}
+
+function closeImage() {
+  // Hide the overlay
+  document.getElementById("lightbox").style.display = "none";
+}
+
 <!-- Darkmode Logic -->
         const isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         console.log(isDarkMode()); // true or false
@@ -171,6 +187,47 @@
         });
 </script>
 <style>
+/*Zoom Theming*/
+		/* Thumbnail styling */
+	.Copyparty-Android-Image, .Copyparty-Windows-Image {
+	  cursor: pointer !important;
+	  transition: transform 0.2s;
+	}
+	.Copyparty-Windows-Image:hover .Copyparty-Android-Image:hover {
+	  transform: scale(1.005);
+	}
+
+	/* Lightbox hidden by default */
+	#lightbox {
+	  display: none;
+	  position: fixed;
+	  z-index: 999;
+	  top: 0; left: 0;
+	  width: 100%; height: 100%;
+	  background-color: rgba(0, 0, 0, 0.8);
+	  justify-content: center;
+	  align-items: center;
+	}
+
+	/* Expanded image style */
+	#lightbox-img {
+	  max-width: 100%;
+	  max-height: 100%;
+	  transform: scale(1.5);
+	  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+	  padding: 0 27% 0 27%;
+	}
+
+	/* Close button */
+	#close-btn {
+	  position: absolute;
+	  top: 20px; right: 30px;
+	  color: white;
+	  font-size: 40px;
+	  cursor: pointer;
+	}
+
+
     @media (prefers-color-scheme: dark) {
         body {color: white !important;}
         .drop-nav a {color: white !important;}
@@ -535,5 +592,9 @@
 
 	
 </style>
+	<div id="lightbox" onclick="closeImage()">
+	  <span id="close-btn">&times;</span>
+	  <img id="lightbox-img" alt="Expanded View">
+	</div>
 </body>
 </html>
